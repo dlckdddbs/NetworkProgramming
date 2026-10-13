@@ -2,16 +2,35 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+
 public class ScoreManager : MonoBehaviour
 {
     public int score;
     public GameObject resultPanel;
+    public GameObject newBestText;
+    public GameObject startPanel;
     public TMP_Text scoreText;
     public TMP_Text bestText;
+    public TMP_Text hudText;
+
+    void Start()                          // 추가
+    {
+        Time.timeScale = 0f;
+        startPanel.SetActive(true);
+    }
+
+    public void StartGame()               // 추가
+    {
+        startPanel.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+
 
     public void AddScore(int amount)
     {
-        score += amount;
+        score = Mathf.Max(0, score + amount);
+        hudText.text = score.ToString();  // 추가
     }
 
     public void GameOver()
@@ -22,6 +41,7 @@ public class ScoreManager : MonoBehaviour
             best = score;
             PlayerPrefs.SetInt("BestScore", best);
             PlayerPrefs.Save();
+            newBestText.SetActive(true);      // 추가
         }
         scoreText.text = "SCORE " + score;
         bestText.text = "BEST " + best;
